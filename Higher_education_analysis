@@ -32,6 +32,15 @@ ORDER BY median_hh_income DESC;
 SELECT st AS state,
 round(avg(median_hh_income),2) AS County_avg
 FROM acs_2011_2015_stats
+
+-- Repeating but adding in the percentage of individuals with higher education and ranking by county, then state, then education --
+
+SELECT county,
+st AS state,
+pct_bachelors_higher as Bachelors,
+round(avg(median_hh_income),2) AS County_avg
+FROM acs_2011_2015_stats
 WHERE median_hh_income is NOT NULL
-GROUP BY st
+Group BY county, st, pct_bachelors_higher
+Order by county_avg DESC
 Order by county_avg DESC
