@@ -1,0 +1,37 @@
+-- Creating table --
+CREATE TABLE acs_2011_2015_stats (
+geoid varchar(14) CONSTRAINT geoid_key PRIMARY KEY,
+county varchar(50) NOT NULL,
+st varchar(20) NOT NULL,
+pct_travel_60_min numeric(5,3) NOT NULL,
+pct_bachelors_higher numeric(5,3) NOT NULL,
+pct_masters_higher numeric(5,3) NOT NULL,
+median_hh_income integer,
+CHECK (pct_masters_higher <= pct_bachelors_higher)
+);
+
+-- Importing dataset into the table --
+COPY acs_2011_2015_stats
+FROM 'C:\YourDirectory\acs_2011_2015_stats.csv'
+WITH (FORMAT CSV, HEADER, DELIMITER ',');
+SELECT * FROM acs_2011_2015_stats;
+
+-- Selecting all counties and their median household income --
+SELECT county, st, median_hh_income
+FROM acs_2011_2015_stats
+ORDER BY median_hh_income DESC;
+--The first row from this shows a null value for median income! --
+
+-- Removing null value from selection --
+SELECT county, st, median_hh_income
+FROM acs_2011_2015_stats
+WHERE median_hh_income is NOT NULL
+ORDER BY median_hh_income DESC;
+
+-- Getting the average income from each state and ordering them by highest to lowest --
+SELECT st AS state,
+round(avg(median_hh_income),2) AS County_avg
+FROM acs_2011_2015_stats
+WHERE median_hh_income is NOT NULL
+GROUP BY st
+Order by county_avg DESC
